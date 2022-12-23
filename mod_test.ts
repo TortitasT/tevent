@@ -125,3 +125,43 @@ Deno.test("Works with arguments", () => {
 
   assertEquals(test.value, 5);
 });
+
+Deno.test("Can stop listening callable", () => {
+  const testEvent = new Event();
+
+  const test = new Increment();
+
+  testEvent.listen(test.increment.bind(test));
+
+  assertEquals(test.value, 0);
+
+  testEvent.notice();
+
+  assertEquals(test.value, 1);
+
+  testEvent.unlisten(test.increment.bind(test));
+
+  testEvent.notice();
+
+  assertEquals(test.value, 1);
+});
+
+Deno.test("Can stop listening listener", () => {
+  const testEvent = new Event();
+
+  const test = new IncrementWithListener();
+
+  testEvent.listen(test);
+
+  assertEquals(test.value, 0);
+
+  testEvent.notice();
+
+  assertEquals(test.value, 1);
+
+  testEvent.unlisten(test);
+
+  testEvent.notice();
+
+  assertEquals(test.value, 1);
+});
