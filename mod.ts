@@ -1,4 +1,8 @@
 // deno-lint-ignore-file
+export interface Listener {
+  update(...args: any[]): void;
+}
+
 export class Event {
   listeners: Function[] = [];
 
@@ -25,7 +29,19 @@ export class Event {
     });
   }
 
-  listen(listener: Function) {
-    this.listeners.push(listener);
+  listen(callable: Function): void;
+  listen(listener: Listener): void;
+  listen(any: any): void {
+    if (any.update) {
+      this.listeners.push(any.update.bind(any));
+      return;
+    }
+
+    if (any) {
+      this.listeners.push(any);
+      return;
+    }
+
+    throw new Error("No listener function provided");
   }
 }

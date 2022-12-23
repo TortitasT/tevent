@@ -1,10 +1,18 @@
 import { assertEquals } from "https://deno.land/std@0.164.0/testing/asserts.ts";
-import { Event } from "./mod.ts";
+import { Event, Listener } from "./mod.ts";
 
 class Increment {
   value: number = 0;
 
   increment() {
+    this.value++;
+  }
+}
+
+class IncrementWithListener implements Listener {
+  value: number = 0;
+
+  update() {
     this.value++;
   }
 }
@@ -82,4 +90,38 @@ Deno.test("Works with anonymous function", () => {
   testEvent.notice();
 
   assertEquals(called, true);
+});
+
+Deno.test("Works with listener object", () => {
+  const testEvent = new Event();
+
+  const test = new IncrementWithListener();
+
+  testEvent.listen(test);
+
+  assertEquals(test.value, 0);
+
+  testEvent.notice();
+
+  assertEquals(test.value, 1);
+});
+
+Deno.test("Works with arguments", () => {
+  const testEvent = new Event();
+
+  const test = {
+    value: 0,
+
+    increment(value: number, value2: number) {
+      this.value += value + value2;
+    },
+  };
+
+  testEvent.listen(test.increment.bind(test));
+
+  assertEquals(test.value, 0);
+
+  testEvent.notice(2, 3);
+
+  assertEquals(test.value, 5);
 });
