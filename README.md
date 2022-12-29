@@ -30,7 +30,7 @@ event.notify("Hello World!"); // This will not be printed
 ```
 
 ### Passing a function to the listen method
-Note: If you pass a function to the listen method, you must pass the same function to the unlisten method.
+#### Note: If you pass a function to the listen method, you must pass the same function to the unlisten method.
 ```ts
 import { Event } from "https://deno.land/x/tevent/mod.ts";
 
@@ -49,7 +49,7 @@ event.unlisten((data: any) => {
 event.notify("Hello World!"); // This will not be printed
 ```
 
-#### Note: If you use a function from an object you must use .bind() to pass the correct context to the function.
+#### Note: If you use a function from an object you must use .bind() to pass the correct context to the function.
 ```ts
 import { Event } from "https://deno.land/x/tevent/mod.ts";
 
